@@ -106,8 +106,7 @@ public class CheckoutPagSeguroResource {
 
 		/* Endereço do comprador */
 
-		Optional<Endereco> objEnd = enderecoRepository
-				.findById(dadosPayment.getPedido().getEnderecoDeEntrega().getId());
+		Optional<Endereco> objEnd = enderecoRepository.findById(dadosPayment.getPedido().getEnderecoDeEntrega().getId());
 		endereco = new Endereco();
 		endereco = objEnd.get();
 		address.setStreet(this.endereco.getLogradouro());
@@ -137,18 +136,10 @@ public class CheckoutPagSeguroResource {
 
 		request.setCreditCardToken(dadosPayment.getToken());
 
-		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(),
-				(UTILS.round(dadosPayment.getTotal()))));
+		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(), (UTILS.round(dadosPayment.getTotal()))));
 
 		// DADOS DO COMPRADOR ENDEREÇO
-		request.setBillingAddress(new Address("BRA", //
-				"SP", //
-				"Sao Paulo", //
-				"Jardim Paulistano", //
-				"01452002", //
-				"Av. Brig. Faria Lima", //
-				"1384", //
-				"5º andar"));
+		request.setBillingAddress(new Address("BRA", "SP",	"Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));
 
 		try {
 
@@ -160,11 +151,8 @@ public class CheckoutPagSeguroResource {
 				
 				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
 
-				// pedido = pedidoService.insert(this.pedido);
-				// URI uri =
-				// ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 			}
-		} catch (PagSeguroServiceException e) {
+		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 
