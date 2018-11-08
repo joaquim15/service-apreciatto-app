@@ -92,11 +92,21 @@
 			<version>4.2</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/br.com.uol.pagseguro/pagseguro-api -->
 		<dependency>
 			<groupId>br.com.uol.pagseguro</groupId>
 			<artifactId>pagseguro-api</artifactId>
 			<version>4.3.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.pagseguro</groupId>
+			<artifactId>pagseguro</artifactId>
+			<version>2.6.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/pagseguro-api-2.6.0.jar</systemPath>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
