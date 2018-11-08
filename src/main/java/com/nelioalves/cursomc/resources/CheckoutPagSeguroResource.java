@@ -19,7 +19,8 @@ import com.nelioalves.cursomc.dto.PaymentDTO;
 import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 
-import br.com.uol.pagseguro.domain.Transaction;
+import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
+
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
