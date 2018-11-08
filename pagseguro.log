@@ -1,0 +1,36 @@
+07/11/2018 18:41:48 PagSeguro.br.com.uol.pagseguro.api.http.AuthenticatedHttpClient[INFO]: Correlation Id: e7e3dbd6-59bd-4765-b1c9-4564c0c9b20a
+07/11/2018 18:41:48 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Executando [POST] em [https://ws.sandbox.pagseguro.uol.com.br/v2/sessions?email=joaquim.moura@interaconsultoria.com.br&token=DA30A072D2F845228E75F0BCC0A12518&correlationId=e7e3dbd6-59bd-4765-b1c9-4564c0c9b20a]
+07/11/2018 18:41:48 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Abrindo conexao
+07/11/2018 18:41:48 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Escrevendo body
+07/11/2018 18:41:59 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Lendo resposta
+07/11/2018 18:41:59 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Fechando conexao
+07/11/2018 18:42:50 PagSeguro.br.com.uol.pagseguro.api.http.AuthenticatedHttpClient[INFO]: Correlation Id: 9db22495-1578-4afa-92cf-ceea79bd4303
+07/11/2018 18:42:50 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Executando [POST] em [https://ws.sandbox.pagseguro.uol.com.br/v2/sessions?email=joaquim.moura@interaconsultoria.com.br&token=DA30A072D2F845228E75F0BCC0A12518&correlationId=9db22495-1578-4afa-92cf-ceea79bd4303]
+07/11/2018 18:42:50 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Abrindo conexao
+07/11/2018 18:42:50 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Escrevendo body
+07/11/2018 18:42:51 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Lendo resposta
+07/11/2018 18:42:51 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Fechando conexao
+07/11/2018 19:08:47 PagSeguro.br.com.uol.pagseguro.api.http.AuthenticatedHttpClient[INFO]: Correlation Id: e6edbf5d-1584-4cc1-8192-9f19708122f1
+07/11/2018 19:08:48 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Executando [POST] em [https://ws.sandbox.pagseguro.uol.com.br/v2/sessions?email=joaquim.moura@interaconsultoria.com.br&token=DA30A072D2F845228E75F0BCC0A12518&correlationId=e6edbf5d-1584-4cc1-8192-9f19708122f1]
+07/11/2018 19:08:48 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Abrindo conexao
+07/11/2018 19:08:48 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Escrevendo body
+07/11/2018 19:08:49 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Lendo resposta
+07/11/2018 19:08:49 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Fechando conexao
+07/11/2018 19:12:50 PagSeguro.br.com.uol.pagseguro.api.http.AuthenticatedHttpClient[INFO]: Correlation Id: e8abf7ad-687a-4b98-a1cc-17204da1fd0f
+07/11/2018 19:12:50 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Executando [POST] em [https://ws.sandbox.pagseguro.uol.com.br/v2/sessions?email=joaquim.moura@interaconsultoria.com.br&token=DA30A072D2F845228E75F0BCC0A12518&correlationId=e8abf7ad-687a-4b98-a1cc-17204da1fd0f]
+07/11/2018 19:12:50 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Abrindo conexao
+07/11/2018 19:12:50 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Escrevendo body
+07/11/2018 19:12:51 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Lendo resposta
+07/11/2018 19:12:51 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Fechando conexao
+08/11/2018 08:50:51 PagSeguro.br.com.uol.pagseguro.api.http.AuthenticatedHttpClient[INFO]: Correlation Id: f349281f-651c-4e02-a43c-063a3ba9db97
+08/11/2018 08:50:51 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Executando [POST] em [https://ws.sandbox.pagseguro.uol.com.br/v2/sessions?email=joaquim.moura@interaconsultoria.com.br&token=DA30A072D2F845228E75F0BCC0A12518&correlationId=f349281f-651c-4e02-a43c-063a3ba9db97]
+08/11/2018 08:50:51 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Abrindo conexao
+08/11/2018 08:50:51 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Escrevendo body
+08/11/2018 08:50:52 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Lendo resposta
+08/11/2018 08:50:52 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Fechando conexao
+08/11/2018 08:56:32 PagSeguro.br.com.uol.pagseguro.api.http.AuthenticatedHttpClient[INFO]: Correlation Id: 1c40a363-dc99-4d8a-bc23-9dc27e928911
+08/11/2018 08:56:32 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Executando [POST] em [https://ws.sandbox.pagseguro.uol.com.br/v2/sessions?email=joaquim.moura@interaconsultoria.com.br&token=DA30A072D2F845228E75F0BCC0A12518&correlationId=1c40a363-dc99-4d8a-bc23-9dc27e928911]
+08/11/2018 08:56:32 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Abrindo conexao
+08/11/2018 08:56:32 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Escrevendo body
+08/11/2018 08:56:33 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Lendo resposta
+08/11/2018 08:56:33 PagSeguro.br.com.uol.pagseguro.api.http.JSEHttpClient[INFO]: Fechando conexao
