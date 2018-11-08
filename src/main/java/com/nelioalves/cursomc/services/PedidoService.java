@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.ItemPedido;
 import com.nelioalves.cursomc.domain.PagamentoComBoleto;
+import com.nelioalves.cursomc.domain.PagamentoEmDinheiro;
 import com.nelioalves.cursomc.domain.Pedido;
 import com.nelioalves.cursomc.domain.enums.EstadoPagamento;
 import com.nelioalves.cursomc.repositories.ItemPedidoRepository;
@@ -60,6 +61,9 @@ public class PedidoService {
 		if (obj.getPagamento() instanceof PagamentoComBoleto) {
 			PagamentoComBoleto pagto = (PagamentoComBoleto) obj.getPagamento();
 			boletoService.preencherPagamentoComBoleto(pagto, obj.getInstante());
+		} else if (obj.getPagamento() instanceof PagamentoEmDinheiro) {
+			PagamentoEmDinheiro pagtoMoney = (PagamentoEmDinheiro) obj.getPagamento();
+			boletoService.preencherPagamentoEmDinheiro(pagtoMoney, obj.getInstante());
 		}
 		obj = repo.save(obj);
 		pagamentoRepository.save(obj.getPagamento());
