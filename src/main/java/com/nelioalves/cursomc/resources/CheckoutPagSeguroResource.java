@@ -152,7 +152,7 @@ public class CheckoutPagSeguroResource {
 				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
 
 			}
-		} catch (Exception e) {
+		} catch (PagSeguroServiceException e) {
 			System.err.println(e.getMessage());
 		}
 
