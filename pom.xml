@@ -100,12 +100,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.pagseguro</groupId>
-			<artifactId>pagseguro</artifactId>
-			<version>2.6.0</version>
-		</dependency>
-
-		<dependency>
 			<groupId>com.pagseguro</groupId>
 			<artifactId>pagseguro</artifactId>
 			<version>2.6.0</version>
