@@ -21,9 +21,12 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 
 import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
+import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
+import br.com.uol.pagseguro.domain.SenderDocument;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
+import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 
 @RestController
@@ -64,8 +67,21 @@ public class CheckoutPagSeguroResource {
 		cliente = new Cliente();
 
 		Optional<Cliente> objCli = clienteRepository.findById(dadosPayment.getPedido().getCliente().getId());
-		
+
 		Sender send = new Sender();
+		Phone phone = new Phone();
+		SenderDocument document = new SenderDocument();				
+
+		cliente = objCli.get();
+		send.setName("jOAQUIM DE cASTRO moura");
+		send.setEmail("c54794630389511462720@sandbox.pagseguro.com.br");
+		send.setHash(dadosPayment.getHash());
+		phone.setAreaCode("11"); // TODO tratar codigo de area
+		phone.setFullPhone("986789299"); // TODO tratar numero celular
+		send.setPhone(phone);
+		document.setType(DocumentType.CPF);
+		document.setValue(cliente.getCpfOuCnpj());
+		send.addDocument(document);
 
 		return ResponseEntity.ok().body(transaction);
 
