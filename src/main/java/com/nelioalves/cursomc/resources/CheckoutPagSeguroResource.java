@@ -16,20 +16,28 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.Endereco;
+import com.nelioalves.cursomc.dto.ItemProdutoDTO;
 import com.nelioalves.cursomc.dto.PaymentDTO;
 import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
-import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
+import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
+import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.SenderDocument;
+import br.com.uol.pagseguro.domain.Transaction;
+import br.com.uol.pagseguro.domain.direct.Installment;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
+import br.com.uol.pagseguro.enums.ShippingType;
+import br.com.uol.pagseguro.exception.PagSeguroServiceException;
+import br.com.uol.pagseguro.properties.PagSeguroConfig;
+import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -56,8 +64,8 @@ public class CheckoutPagSeguroResource {
 		Sender send = new Sender();
 		Phone phone = new Phone();
 		SenderDocument document = new SenderDocument();
-		Endereco endereco = new Endereco();
 		Address address = new Address();
+		Item item = new Item();
 
 		logger.info("line - 1: " + obj);
 		PaymentDTO dadosPayment = this.gson.fromJson(obj, PaymentDTO.class);
@@ -89,7 +97,8 @@ public class CheckoutPagSeguroResource {
 
 		/* Endereço do comprador */
 
-		Optional<Endereco> objEnd = enderecoRepository.findById(dadosPayment.getPedido().getEnderecoDeEntrega().getId());
+		Optional<Endereco> objEnd = enderecoRepository
+				.findById(dadosPayment.getPedido().getEnderecoDeEntrega().getId());
 		endereco = new Endereco();
 		endereco = objEnd.get();
 		address.setStreet(this.endereco.getLogradouro());
@@ -100,6 +109,43 @@ public class CheckoutPagSeguroResource {
 		address.setCity(this.endereco.getCidade().getNome());
 		address.setPostalCode(UTILS.formatCEP(this.endereco.getCep()));
 		address.setCountry("BRA");
+
+		request.setShippingAddress(address);
+		request.setShippingType(ShippingType.NOT_SPECIFIED);
+
+		/* Dados produto adquirido */
+
+		for (ItemProdutoDTO i : dadosPayment.getItems()) {
+
+			item = new Item();
+			item.setId(String.valueOf(i.getProduto().getId()));
+			item.setDescription(i.getProduto().getNome());
+			item.setAmount(UTILS.round(i.getProduto().getPreco()));
+			item.setQuantity(i.getQuantidade());
+			request.addItem(item);
+		}
+
+		request.setCreditCardToken(dadosPayment.getToken());
+		
+		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(), (UTILS.round(dadosPayment.getTotal()))));
+
+		// DADOS DO COMPRADOR ENDEREÇO
+		request.setBillingAddress(new Address("BRA", "SP",	"Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));
+		
+		try {
+
+			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
+
+			transaction = TransactionService.createTransaction(accountCredentials, request);
+
+			if (transaction != null) {
+				
+				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
+
+			}
+		} catch (PagSeguroServiceException e) {
+			System.err.println(e.getMessage());
+		}
 
 		return ResponseEntity.ok().body(transaction);
 
