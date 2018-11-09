@@ -36,6 +36,7 @@ import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
+import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -47,7 +48,6 @@ public class CheckoutPagSeguroResource {
 	// private CheckoutService service;
 	private Cliente cliente = null;
 	private Endereco endereco;
-	private Transaction transaction = null;
 	private Gson gson = new GsonBuilder().create();
 
 	@Autowired
@@ -124,18 +124,21 @@ public class CheckoutPagSeguroResource {
 		}
 
 		request.setCreditCardToken(dadosPayment.getToken());
-		
+
 		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(), (UTILS.round(dadosPayment.getTotal()))));
 
 		// DADOS DO COMPRADOR ENDEREÇO
-		request.setBillingAddress(new Address("BRA", "SP",	"Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));
-		
-		 AccountCredentials credentials = PagSeguroConfig.getAccountCredentials();
-		
-		
+		request.setBillingAddress(new Address("BRA", "SP", "Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));
 		
 
-		return ResponseEntity.ok().body(transaction);
+		AccountCredentials credentials = PagSeguroConfig.getAccountCredentials();
+		logger.info("Credenciais: " + credentials);
+		
+		TransactionService.createTransaction(credentials, request);
+
+		//return ResponseEntity.ok().body(transaction);
+		
+		return null;
 
 	}
 
