@@ -22,13 +22,13 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
-import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
 import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.SenderDocument;
+import br.com.uol.pagseguro.domain.Transaction;
 import br.com.uol.pagseguro.domain.direct.Installment;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
@@ -36,7 +36,6 @@ import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
-import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -134,7 +133,6 @@ public class CheckoutPagSeguroResource {
 		AccountCredentials credentials = PagSeguroConfig.getAccountCredentials();
 		logger.info("Credenciais: " + credentials);
 		
-		TransactionService.createTransaction(credentials, request);
 
 		//return ResponseEntity.ok().body(transaction);
 		
