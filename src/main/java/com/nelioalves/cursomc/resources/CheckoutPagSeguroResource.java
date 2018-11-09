@@ -22,6 +22,7 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
+import br.com.uol.pagseguro.api.transaction.TransactionsResource;
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
 import br.com.uol.pagseguro.domain.Item;
@@ -48,6 +49,7 @@ public class CheckoutPagSeguroResource {
 	private Cliente cliente = null;
 	private Endereco endereco;
 	private Gson gson = new GsonBuilder().create();
+	private Transaction transaction = null;
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
@@ -127,11 +129,12 @@ public class CheckoutPagSeguroResource {
 		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(), (UTILS.round(dadosPayment.getTotal()))));
 
 		// DADOS DO COMPRADOR ENDEREÇO
-		request.setBillingAddress(new Address("BRA", "SP", "Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));
-		
+		request.setBillingAddress(new Address("BRA", "SP", "Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));		
 
 		AccountCredentials credentials = PagSeguroConfig.getAccountCredentials();
 		logger.info("Credenciais: " + credentials);
+		
+		transaction = new Transaction();
 		
 
 		//return ResponseEntity.ok().body(transaction);
