@@ -22,6 +22,10 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
+import br.com.uol.pagseguro.api.PagSeguro;
+import br.com.uol.pagseguro.api.PagSeguroEnv;
+import br.com.uol.pagseguro.api.credential.Credential;
+import br.com.uol.pagseguro.api.exception.PagSeguroBadRequestException;
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
 import br.com.uol.pagseguro.domain.Item;
@@ -134,19 +138,13 @@ public class CheckoutPagSeguroResource {
 		logger.info("Credenciais: " + credentials);
 
 		try {
-			/*
-			 * If you use application credential you don't need to set
-			 * request.setReceiverEmail(); Set your account credentials on
-			 * src/pagseguro-config.properties You can create an payment using an
-			 * application credential and set an authorizationCode ApplicationCredentials
-			 * applicationCredentials = PagSeguroConfig.getApplicationCredentials();
-			 * applicationCredentials.setAuthorizationCode("your_authorizationCode");
-			 *
-			 */
 
 			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
+			final PagSeguro pagSeguro = PagSeguro
+					.instance(Credential.sellerCredential(PagSeguroConfig.getAccountCredentials().getEmail(),
+							PagSeguroConfig.getAccountCredentials().getToken()), PagSeguroEnv.SANDBOX);
 
-		} catch (Exception e) {
+		} catch (PagSeguroBadRequestException  e) {
 			System.err.println(e.getMessage());
 		}
 		return null;
