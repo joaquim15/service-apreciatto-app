@@ -21,6 +21,7 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 
 import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
+import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.PaymentMode;
@@ -63,6 +64,8 @@ public class CheckoutPagSeguroResource {
 		cliente = new Cliente();
 
 		Optional<Cliente> objCli = clienteRepository.findById(dadosPayment.getPedido().getCliente().getId());
+		
+		Sender send = new Sender();
 
 		return ResponseEntity.ok().body(transaction);
 
