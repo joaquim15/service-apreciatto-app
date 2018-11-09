@@ -36,7 +36,6 @@ import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
-import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -133,7 +132,6 @@ public class CheckoutPagSeguroResource {
 		
 		final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
 		
-		TransactionService.createTransaction(accountCredentials, request);
 
 		return ResponseEntity.ok().body(transaction);
 
