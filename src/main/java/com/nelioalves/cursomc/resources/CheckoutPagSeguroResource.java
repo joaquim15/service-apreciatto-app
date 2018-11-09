@@ -22,9 +22,6 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
-import br.com.uol.pagseguro.api.PagSeguro;
-import br.com.uol.pagseguro.api.PagSeguroEnv;
-import br.com.uol.pagseguro.api.credential.Credential;
 import br.com.uol.pagseguro.api.exception.PagSeguroBadRequestException;
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
@@ -39,6 +36,7 @@ import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
+import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -139,12 +137,9 @@ public class CheckoutPagSeguroResource {
 
 		try {
 
-			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
-			final PagSeguro pagSeguro = PagSeguro
-					.instance(Credential.sellerCredential(PagSeguroConfig.getAccountCredentials().getEmail(),
-							PagSeguroConfig.getAccountCredentials().getToken()), PagSeguroEnv.SANDBOX);
+			TransactionService.createTransaction(credentials, request);
 
-		} catch (PagSeguroBadRequestException  e) {
+		} catch (PagSeguroBadRequestException e) {
 			System.err.println(e.getMessage());
 		}
 		return null;
