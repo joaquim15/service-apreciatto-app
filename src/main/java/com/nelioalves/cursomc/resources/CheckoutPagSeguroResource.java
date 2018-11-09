@@ -20,7 +20,9 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 
 import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
-
+import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
+import br.com.uol.pagseguro.enums.Currency;
+import br.com.uol.pagseguro.enums.PaymentMode;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -47,6 +49,13 @@ public class CheckoutPagSeguroResource {
 		logger.info("line - 1: " + obj);
 		PaymentDTO dadosPayment = this.gson.fromJson(obj, PaymentDTO.class);
 		logger.info("line - 2 " + dadosPayment);
+
+		CreditCardCheckout request = new CreditCardCheckout();
+
+		request.setPaymentMode(PaymentMode.GATEWAY);
+		request.setReceiverEmail("joaquim.moura@interaconsultoria.com.br");
+		request.setCurrency(Currency.BRL);
+		request.setReference("REF1234");
 
 		return ResponseEntity.ok().body(transaction);
 	}
