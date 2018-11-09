@@ -22,7 +22,6 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
-import br.com.uol.pagseguro.api.transaction.TransactionsResource;
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
 import br.com.uol.pagseguro.domain.Item;
@@ -36,7 +35,9 @@ import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
+import br.com.uol.pagseguro.exception.PagSeguroServiceException;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
+import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -58,7 +59,7 @@ public class CheckoutPagSeguroResource {
 	private ClienteRepository clienteRepository;
 
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Transaction> payment(@Valid @RequestBody String obj) throws Exception {
+	public ResponseEntity<Void> payment(@Valid @RequestBody String obj) throws Exception {
 
 		Sender send = new Sender();
 		Phone phone = new Phone();
@@ -126,19 +127,38 @@ public class CheckoutPagSeguroResource {
 
 		request.setCreditCardToken(dadosPayment.getToken());
 
-		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(), (UTILS.round(dadosPayment.getTotal()))));
+		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(),
+				(UTILS.round(dadosPayment.getTotal()))));
 
 		// DADOS DO COMPRADOR ENDEREÇO
-		request.setBillingAddress(new Address("BRA", "SP", "Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));		
+		request.setBillingAddress(new Address("BRA", "SP", "Sao Paulo", "Jardim Paulistano", "01452002",
+				"Av. Brig. Faria Lima", "1384", "5º andar"));
 
 		AccountCredentials credentials = PagSeguroConfig.getAccountCredentials();
 		logger.info("Credenciais: " + credentials);
-		
-		transaction = new Transaction();
-		
 
-		//return ResponseEntity.ok().body(transaction);
-		
+		try {
+			/*
+			 * If you use application credential you don't need to set
+			 * request.setReceiverEmail(); Set your account credentials on
+			 * src/pagseguro-config.properties You can create an payment using an
+			 * application credential and set an authorizationCode ApplicationCredentials
+			 * applicationCredentials = PagSeguroConfig.getApplicationCredentials();
+			 * applicationCredentials.setAuthorizationCode("your_authorizationCode");
+			 *
+			 */
+
+			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
+
+			final Transaction transaction = TransactionService.createTransaction(accountCredentials, //
+					request);
+
+			if (transaction != null) {
+				System.out.println("Transaction Code - Gateway Mode: " + transaction.getCode());
+			}
+		} catch (PagSeguroServiceException e) {
+			System.err.println(e.getMessage());
+		}
 		return null;
 
 	}
