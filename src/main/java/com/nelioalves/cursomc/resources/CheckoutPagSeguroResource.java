@@ -29,7 +29,9 @@ import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.SenderDocument;
+import br.com.uol.pagseguro.domain.Transaction;
 import br.com.uol.pagseguro.domain.direct.Installment;
+import br.com.uol.pagseguro.domain.direct.checkout.Checkout;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
@@ -135,8 +137,8 @@ public class CheckoutPagSeguroResource {
 
 		try {
 			
-			TransactionService.createTransaction(accountCredentials, request);
-
+			Checkout c = new Checkout() {
+			};
 
 		} catch (PagSeguroBadRequestException e) {
 			System.err.println(e.getMessage());
