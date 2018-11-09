@@ -19,8 +19,10 @@ import com.nelioalves.cursomc.domain.Endereco;
 import com.nelioalves.cursomc.dto.PaymentDTO;
 import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
+import com.nelioalves.cursomc.resources.utils.UTILS;
 
 import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
+import br.com.uol.pagseguro.domain.Address;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.SenderDocument;
@@ -51,6 +53,12 @@ public class CheckoutPagSeguroResource {
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Transaction> payment(@Valid @RequestBody String obj) throws Exception {
 
+		Sender send = new Sender();
+		Phone phone = new Phone();
+		SenderDocument document = new SenderDocument();
+		Endereco endereco = new Endereco();
+		Address address = new Address();
+
 		logger.info("line - 1: " + obj);
 		PaymentDTO dadosPayment = this.gson.fromJson(obj, PaymentDTO.class);
 		logger.info("line - 2 " + dadosPayment);
@@ -68,12 +76,8 @@ public class CheckoutPagSeguroResource {
 
 		Optional<Cliente> objCli = clienteRepository.findById(dadosPayment.getPedido().getCliente().getId());
 
-		Sender send = new Sender();
-		Phone phone = new Phone();
-		SenderDocument document = new SenderDocument();				
-
 		cliente = objCli.get();
-		send.setName("jOAQUIM DE cASTRO moura");
+		send.setName("Joaquim de castro moura");
 		send.setEmail("c54794630389511462720@sandbox.pagseguro.com.br");
 		send.setHash(dadosPayment.getHash());
 		phone.setAreaCode("11"); // TODO tratar codigo de area
@@ -82,6 +86,20 @@ public class CheckoutPagSeguroResource {
 		document.setType(DocumentType.CPF);
 		document.setValue(cliente.getCpfOuCnpj());
 		send.addDocument(document);
+
+		/* Endereço do comprador */
+
+		Optional<Endereco> objEnd = enderecoRepository.findById(dadosPayment.getPedido().getEnderecoDeEntrega().getId());
+		endereco = new Endereco();
+		endereco = objEnd.get();
+		address.setStreet(this.endereco.getLogradouro());
+		address.setState("SP");
+		address.setNumber(this.endereco.getNumero());
+		address.setComplement(this.endereco.getComplemento());
+		address.setDistrict(this.endereco.getBairro());
+		address.setCity(this.endereco.getCidade().getNome());
+		address.setPostalCode(UTILS.formatCEP(this.endereco.getCep()));
+		address.setCountry("BRA");
 
 		return ResponseEntity.ok().body(transaction);
 
