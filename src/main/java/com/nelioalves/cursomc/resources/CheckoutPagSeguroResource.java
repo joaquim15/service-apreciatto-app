@@ -150,12 +150,6 @@ public class CheckoutPagSeguroResource {
 
 			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
 
-			final Transaction transaction = TransactionService.createTransaction(accountCredentials, //
-					request);
-
-			if (transaction != null) {
-				System.out.println("Transaction Code - Gateway Mode: " + transaction.getCode());
-			}
 		} catch (PagSeguroServiceException e) {
 			System.err.println(e.getMessage());
 		}
