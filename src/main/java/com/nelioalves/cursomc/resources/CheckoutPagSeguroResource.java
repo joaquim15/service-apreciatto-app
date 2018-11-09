@@ -23,6 +23,7 @@ import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
 import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
+import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
 import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Phone;
@@ -34,6 +35,7 @@ import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
+import br.com.uol.pagseguro.properties.PagSeguroConfig;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -128,7 +130,7 @@ public class CheckoutPagSeguroResource {
 		// DADOS DO COMPRADOR ENDEREÇO
 		request.setBillingAddress(new Address("BRA", "SP",	"Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));
 		
-		
+		final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
 
 		return ResponseEntity.ok().body(transaction);
 
