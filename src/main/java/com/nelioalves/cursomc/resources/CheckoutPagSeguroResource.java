@@ -35,7 +35,6 @@ import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
-import br.com.uol.pagseguro.exception.PagSeguroServiceException;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
 import br.com.uol.pagseguro.service.TransactionService;
 
@@ -97,8 +96,7 @@ public class CheckoutPagSeguroResource {
 
 		/* Endereço do comprador */
 
-		Optional<Endereco> objEnd = enderecoRepository
-				.findById(dadosPayment.getPedido().getEnderecoDeEntrega().getId());
+		Optional<Endereco> objEnd = enderecoRepository.findById(dadosPayment.getPedido().getEnderecoDeEntrega().getId());
 		endereco = new Endereco();
 		endereco = objEnd.get();
 		address.setStreet(this.endereco.getLogradouro());
