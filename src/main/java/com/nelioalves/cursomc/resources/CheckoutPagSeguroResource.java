@@ -132,20 +132,9 @@ public class CheckoutPagSeguroResource {
 		// DADOS DO COMPRADOR ENDEREÇO
 		request.setBillingAddress(new Address("BRA", "SP",	"Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));
 		
-		try {
-
-			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
-
-			transaction = TransactionService.createTransaction(accountCredentials, request);
-
-			if (transaction != null) {
-				
-				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
-
-			}
-		} catch (PagSeguroServiceException e) {
-			System.err.println(e.getMessage());
-		}
+		final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
+		
+		TransactionService.createTransaction(accountCredentials, request);
 
 		return ResponseEntity.ok().body(transaction);
 
