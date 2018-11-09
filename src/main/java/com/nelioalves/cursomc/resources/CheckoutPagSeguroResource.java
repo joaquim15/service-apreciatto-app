@@ -28,16 +28,13 @@ import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.SenderDocument;
-import br.com.uol.pagseguro.domain.Transaction;
 import br.com.uol.pagseguro.domain.direct.Installment;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
-import br.com.uol.pagseguro.exception.PagSeguroServiceException;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
-import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -50,7 +47,6 @@ public class CheckoutPagSeguroResource {
 	private Cliente cliente = null;
 	private Endereco endereco;
 	private Gson gson = new GsonBuilder().create();
-	private Transaction transaction = null;
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
