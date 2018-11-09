@@ -1,5 +1,6 @@
 package com.nelioalves.cursomc.resources;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import javax.validation.Valid;
@@ -57,7 +58,14 @@ public class CheckoutPagSeguroResource {
 		request.setCurrency(Currency.BRL);
 		request.setReference("REF1234");
 
+		// dados do comprador
+
+		cliente = new Cliente();
+
+		Optional<Cliente> objCli = clienteRepository.findById(dadosPayment.getPedido().getCliente().getId());
+
 		return ResponseEntity.ok().body(transaction);
+
 	}
 
 }
