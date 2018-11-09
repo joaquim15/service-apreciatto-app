@@ -36,6 +36,7 @@ import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
+import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -131,6 +132,8 @@ public class CheckoutPagSeguroResource {
 		request.setBillingAddress(new Address("BRA", "SP",	"Sao Paulo", "Jardim Paulistano", "01452002", "Av. Brig. Faria Lima", "1384", "5º andar"));
 		
 		final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
+		
+		TransactionService.createTransaction(accountCredentials, request);
 
 		return ResponseEntity.ok().body(transaction);
 
