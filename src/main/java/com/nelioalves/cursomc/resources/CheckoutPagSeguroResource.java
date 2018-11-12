@@ -22,7 +22,7 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
-import br.com.uol.pagseguro.domain.Transaction;
+import br.com.uol.pagseguro.api.direct.preapproval.Transaction;
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
 import br.com.uol.pagseguro.domain.Document;
@@ -37,9 +37,8 @@ import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
-import br.com.uol.pagseguro.exception.PagSeguroServiceException;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
-import br.com.uol.pagseguro.service.TransactionService;
+
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -148,13 +147,13 @@ public class CheckoutPagSeguroResource {
 
 			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
 
-			transaction = TransactionService.createTransaction(accountCredentials, request);
+			/*transaction = TransactionService.createTransaction(accountCredentials, request);
 
 			if (transaction != null) {
 
 				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
 
-			}
+			}*/
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
