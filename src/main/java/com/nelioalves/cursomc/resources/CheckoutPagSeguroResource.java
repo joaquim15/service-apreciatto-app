@@ -111,8 +111,6 @@ public class CheckoutPagSeguroResource {
 
 			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
 
-			final Transaction transaction = TransactionService.createTransaction(accountCredentials, //
-					request);
 
 			if (transaction != null) {
 				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
