@@ -119,6 +119,14 @@
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
+		<repository>
+            <id>pagseguro-lib</id>
+            <url>https://mvnrepository.com/artifact/br.com.uol.pagseguro/pagseguro-api</url>
+        </repository>
+        <repository>
+			<id>pagseguro-lib</id>
+			<url>http://repo.mvn.intranet.s2it.com.br:8081/nexus/content/groups/public/</url>
+		</repository>
 	</repositories>
 
 	<reporting>
