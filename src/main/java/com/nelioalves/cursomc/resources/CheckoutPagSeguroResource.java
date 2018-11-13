@@ -1,5 +1,6 @@
 package com.nelioalves.cursomc.resources;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -24,13 +25,11 @@ import com.nelioalves.cursomc.resources.utils.UTILS;
 
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
-import br.com.uol.pagseguro.domain.Document;
 import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.SenderDocument;
 import br.com.uol.pagseguro.domain.Transaction;
-import br.com.uol.pagseguro.domain.direct.Holder;
 import br.com.uol.pagseguro.domain.direct.Installment;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
@@ -52,6 +51,8 @@ public class CheckoutPagSeguroResource {
 	private Endereco endereco;
 	private Transaction transaction = null;
 	private Gson gson = new GsonBuilder().create();
+	private Integer parcelas = 0;
+	private BigDecimal total;
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
@@ -96,10 +97,11 @@ public class CheckoutPagSeguroResource {
 		send.addDocument(document);
 
 		// DADOS DO COMPRADOR
-		request.setHolder(new Holder("Dados Comprador", //
-				new Phone("11", "56273440"), //
-				new Document(DocumentType.CPF, "000.000.001-91"), //
-				"07/05/1981"));
+		/*
+		 * request.setHolder(new Holder("Dados Comprador", // new Phone("11",
+		 * "56273440"), // new Document(DocumentType.CPF, "000.000.001-91"), //
+		 * "07/05/1981"));
+		 */
 
 		request.setSender(send);
 
@@ -135,9 +137,10 @@ public class CheckoutPagSeguroResource {
 		}
 
 		request.setCreditCardToken(dadosPayment.getToken());
+		parcelas = dadosPayment.getPedido().getPagamento().getNumeroDeParcelas();
+		total = UTILS.round(dadosPayment.getTotal());
 
-		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(),
-				(UTILS.round(dadosPayment.getTotal()))));
+		request.setInstallment(new Installment(parcelas, total));
 
 		// DADOS DO COMPRADOR ENDEREÇO
 		request.setBillingAddress(new Address("BRA", "SP", "Sao Paulo", "Jardim Paulistano", "01452002",
