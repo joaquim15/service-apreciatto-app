@@ -117,7 +117,7 @@
 	<repositories>
 		<repository>
 			<id>pagseguro</id>
-			<url>https://github.com/pagseguro/java</url>
+			<url>https://github.com/pagseguro/pagseguro-java-sdk/</url>
 		</repository>
 	</repositories>
 
