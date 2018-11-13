@@ -1,41 +1,26 @@
 package com.nelioalves.cursomc.resources;
 
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.logging.Logger;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.nelioalves.cursomc.domain.Cliente;
-import com.nelioalves.cursomc.domain.Endereco;
-import com.nelioalves.cursomc.dto.ItemProdutoDTO;
-import com.nelioalves.cursomc.dto.PaymentDTO;
-import com.nelioalves.cursomc.repositories.ClienteRepository;
-import com.nelioalves.cursomc.repositories.EnderecoRepository;
-import com.nelioalves.cursomc.resources.utils.UTILS;
 
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
+import br.com.uol.pagseguro.domain.Document;
 import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.SenderDocument;
 import br.com.uol.pagseguro.domain.Transaction;
+import br.com.uol.pagseguro.domain.direct.Holder;
 import br.com.uol.pagseguro.domain.direct.Installment;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
+import br.com.uol.pagseguro.exception.PagSeguroServiceException;
 import br.com.uol.pagseguro.properties.PagSeguroConfig;
 import br.com.uol.pagseguro.service.TransactionService;
 
@@ -43,125 +28,140 @@ import br.com.uol.pagseguro.service.TransactionService;
 @RequestMapping(value = "/checkout-pag-seguro")
 public class CheckoutPagSeguroResource {
 
-	private static final Logger logger = Logger.getLogger(CheckoutPagSeguroResource.class.getName());
+	public static void main(String[] args) {
+		// default mode
+		createTransactionUsingDefaultMode();
 
-	// @Autowired
-	// private CheckoutService service;
-	private Cliente cliente = null;
-	private Endereco endereco;
-	private Transaction transaction = null;
-	private Gson gson = new GsonBuilder().create();
-	private Integer parcelas = 0;
-	private BigDecimal total;
+		// gateway mode
+		createTransactionUsingGatewayMode();
+	}
 
-	@Autowired
-	private EnderecoRepository enderecoRepository;
+	public static void createTransactionUsingDefaultMode() {
+		final CreditCardCheckout request = new CreditCardCheckout();
 
-	@Autowired
-	private ClienteRepository clienteRepository;
+		request.setPaymentMode(PaymentMode.DEFAULT);
 
-	@RequestMapping(method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<Transaction> payment(@Valid @RequestBody String obj) throws Exception {
+		request.setReceiverEmail("backoffice@lojamodelo.com.br");
 
-		Sender send = new Sender();
-		Phone phone = new Phone();
-		SenderDocument document = new SenderDocument();
-		Address address = new Address();
-
-		logger.info("line - 1: " + obj);
-		PaymentDTO dadosPayment = this.gson.fromJson(obj, PaymentDTO.class);
-		logger.info("line - 2 " + dadosPayment);
-
-		CreditCardCheckout request = new CreditCardCheckout();
-
-		request.setPaymentMode(PaymentMode.GATEWAY);
-		request.setReceiverEmail("joaquim.moura@interaconsultoria.com.br");
 		request.setCurrency(Currency.BRL);
+
+		request.setNotificationURL("http://www.meusite.com.br/notification");
+
 		request.setReference("REF1234");
 
-		// dados do comprador
+		request.setSender(new Sender("João Comprador", //
+				"c54794630389511462720@sandbox.pagseguro.com.br", //
+				new Phone("11", "56273440"), //
+				new SenderDocument(DocumentType.CPF, "000.000.001-91")));
 
-		cliente = new Cliente();
+		request.setShippingAddress(new Address("BRA", //
+				"SP", //
+				"Sao Paulo", //
+				"Jardim Paulistano", //
+				"01452002", //
+				"Av. Brig. Faria Lima", //
+				"1384", //
+				"5º andar"));
+		request.setShippingType(ShippingType.SEDEX);
 
-		Optional<Cliente> objCli = clienteRepository.findById(dadosPayment.getPedido().getCliente().getId());
+		request.setShippingCost(new BigDecimal("5.00"));
 
-		cliente = objCli.get();
-		send.setName("jOAQUIM DE cASTRO moura");
-		send.setEmail("c54794630389511462720@sandbox.pagseguro.com.br");
-		send.setHash(dadosPayment.getHash());
-		phone.setAreaCode("11"); // TODO tratar codigo de area
-		phone.setFullPhone("986789299"); // TODO tratar numero celular
-		send.setPhone(phone);
-		document.setType(DocumentType.CPF);
-		document.setValue(cliente.getCpfOuCnpj());
-		send.addDocument(document);
+		request.addItem(new Item("1", //
+				"Notebook Prata", //
+				Integer.valueOf(1), //
+				new BigDecimal("2500.00")));
 
-		// DADOS DO COMPRADOR
-		/*
-		 * request.setHolder(new Holder("Dados Comprador", // new Phone("11",
-		 * "56273440"), // new Document(DocumentType.CPF, "000.000.001-91"), //
-		 * "07/05/1981"));
-		 */
+		request.addItem(new Item("2", //
+				"Notebook Rosa", //
+				Integer.valueOf(1), //
+				new BigDecimal("2500.00")));
 
-		request.setSender(send);
+		request.setCreditCardToken("286ff355747941f58b2093608cd6b7a2");
 
-		/* Endereço do comprador */
+		request.setInstallment(new Installment(1, new BigDecimal("5005.00")));
 
-		Optional<Endereco> objEnd = enderecoRepository
-				.findById(dadosPayment.getPedido().getEnderecoDeEntrega().getId());
-		endereco = new Endereco();
-		endereco = objEnd.get();
-		address.setStreet(this.endereco.getLogradouro());
-		address.setState("SP");
-		address.setNumber(this.endereco.getNumero());
-		address.setComplement(this.endereco.getComplemento());
-		address.setDistrict(this.endereco.getBairro());
-		address.setCity(this.endereco.getCidade().getNome());
-		address.setPostalCode(UTILS.formatCEP(this.endereco.getCep()));
-		address.setCountry("BRA");
+		request.setHolder(new Holder("João Comprador", //
+				new Phone("11", "56273440"), //
+				new Document(DocumentType.CPF, "000.000.001-91"), //
+				"07/05/1981"));
 
-		request.setShippingAddress(address);
-		request.setShippingType(ShippingType.NOT_SPECIFIED);
-
-		/* Dados produto adquirido */
-		Item item = new Item();
-
-		for (ItemProdutoDTO i : dadosPayment.getItems()) {
-
-			item = new Item();
-			item.setId(String.valueOf(i.getProduto().getId()));
-			item.setDescription(i.getProduto().getNome());
-			item.setAmount(UTILS.round(i.getProduto().getPreco()));
-			item.setQuantity(i.getQuantidade());
-			request.addItem(item);
-		}
-
-		request.setCreditCardToken(dadosPayment.getToken());
-		parcelas = dadosPayment.getPedido().getPagamento().getNumeroDeParcelas();
-		total = UTILS.round(dadosPayment.getTotal());
-
-		request.setInstallment(new Installment(parcelas, total));
-
-		// DADOS DO COMPRADOR ENDEREÇO
-		request.setBillingAddress(new Address("BRA", "SP", "Sao Paulo", "Jardim Paulistano", "01452002",
-				"Av. Brig. Faria Lima", "1384", "5º andar"));
+		request.setBillingAddress(new Address("BRA", //
+				"SP", //
+				"Sao Paulo", //
+				"Jardim Paulistano", //
+				"01452002", //
+				"Av. Brig. Faria Lima", //
+				"1384", //
+				"5º andar"));
 
 		try {
+			/*
+			 * If you use application credential you don't need to set
+			 * request.setReceiverEmail(); Set your account credentials on
+			 * src/pagseguro-config.properties You can create an payment using an
+			 * application credential and set an authorizationCode ApplicationCredentials
+			 * applicationCredentials = PagSeguroConfig.getApplicationCredentials();
+			 * applicationCredentials.setAuthorizationCode("your_authorizationCode");
+			 *
+			 */
+			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
+
+			final Transaction transaction = TransactionService.createTransaction(accountCredentials, //
+					request);
+
+			if (transaction != null) {
+				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
+			}
+		} catch (PagSeguroServiceException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	public static void createTransactionUsingGatewayMode() {
+		final CreditCardCheckout request = new CreditCardCheckout();
+
+		request.setPaymentMode(PaymentMode.GATEWAY);
+
+		request.setReceiverEmail("backoffice@lojamodelo.com.br");
+
+		request.setCurrency(Currency.BRL);
+
+		request.setNotificationURL("http://www.meusite.com.br/notification");
+
+		request.setReference("REF1234");
+
+		request.setSender(new Sender("João Comprador", "comprador@uol.com.br"));
+
+		request.setSenderHash("0db5776271490042a3b89f7f54d7e54244cf74d469695aa67c49e11c8a56c2c4");
+
+		request.addItem(new Item("1", "Notebook Prata", Integer.valueOf(1), new BigDecimal("2500.00")));
+		request.addItem(new Item("2", "Notebook Rosa", Integer.valueOf(1), new BigDecimal("2500.00")));
+
+		request.setCreditCardToken("286ff355747941f58b2093608cd6b7a2");
+
+		request.setInstallment(new Installment(1, new BigDecimal("5000.00")));
+
+		try {
+			/*
+			 * If you use application credential you don't need to set
+			 * request.setReceiverEmail(); Set your account credentials on
+			 * src/pagseguro-config.properties You can create an payment using an
+			 * application credential and set an authorizationCode ApplicationCredentials
+			 * applicationCredentials = PagSeguroConfig.getApplicationCredentials();
+			 * applicationCredentials.setAuthorizationCode("your_authorizationCode");
+			 *
+			 */
 
 			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
 
-			transaction = TransactionService.createTransaction(accountCredentials, request);
+			final Transaction transaction = TransactionService.createTransaction(accountCredentials, //
+					request);
 
 			if (transaction != null) {
-
-				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
-
+				System.out.println("Transaction Code - Gateway Mode: " + transaction.getCode());
 			}
-		} catch (Exception e) {
+		} catch (PagSeguroServiceException e) {
 			System.err.println(e.getMessage());
 		}
-
-		return ResponseEntity.ok().body(transaction);
 	}
-
 }
