@@ -97,7 +97,7 @@
 			<artifactId>pagseguro-api</artifactId>
 			<version>2.6.0</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -116,8 +116,8 @@
 
 	<repositories>
 		<repository>
-			<id>pagseguro-lib</id>
-			<url>http://repo.mvn.intranet.s2it.com.br:8081/nexus/content/groups/public/</url>
+			<id>pagseguro</id>
+			<url>https://github.com/pagseguro/java</url>
 		</repository>
 	</repositories>
 
@@ -127,14 +127,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source />
-					<target />
-				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
