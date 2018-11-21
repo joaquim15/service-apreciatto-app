@@ -114,13 +114,6 @@
 
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>pagseguro</id>
-			<url>https://github.com/pagseguro/java</url>
-		</repository>
-	</repositories>
-
 	<reporting>
 		<plugins>
 			<plugin>
