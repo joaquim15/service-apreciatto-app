@@ -105,6 +105,12 @@
 			<version>3.8.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/br.com.uol.pagseguro/pagseguro-api -->
+		<dependency>
+			<groupId>br.com.uol.pagseguro</groupId>
+			<artifactId>pagseguro-api</artifactId>
+			<version>2.6.0</version>
+		</dependency>
 
 	</dependencies>
 

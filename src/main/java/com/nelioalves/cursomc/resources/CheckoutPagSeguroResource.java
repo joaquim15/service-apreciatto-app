@@ -1,6 +1,5 @@
 package com.nelioalves.cursomc.resources;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -23,18 +22,24 @@ import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.resources.utils.UTILS;
 
+import br.com.uol.pagseguro.domain.Transaction;
+import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
+import br.com.uol.pagseguro.domain.Document;
 import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Phone;
 import br.com.uol.pagseguro.domain.Sender;
 import br.com.uol.pagseguro.domain.SenderDocument;
-import br.com.uol.pagseguro.domain.Transaction;
+import br.com.uol.pagseguro.domain.direct.Holder;
 import br.com.uol.pagseguro.domain.direct.Installment;
 import br.com.uol.pagseguro.domain.direct.checkout.CreditCardCheckout;
 import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.DocumentType;
 import br.com.uol.pagseguro.enums.PaymentMode;
 import br.com.uol.pagseguro.enums.ShippingType;
+import br.com.uol.pagseguro.exception.PagSeguroServiceException;
+import br.com.uol.pagseguro.properties.PagSeguroConfig;
+import br.com.uol.pagseguro.service.TransactionService;
 
 @RestController
 @RequestMapping(value = "/checkout-pag-seguro")
@@ -48,8 +53,6 @@ public class CheckoutPagSeguroResource {
 	private Endereco endereco;
 	private Transaction transaction = null;
 	private Gson gson = new GsonBuilder().create();
-	private Integer parcelas = 0;
-	private BigDecimal total;
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
@@ -94,11 +97,10 @@ public class CheckoutPagSeguroResource {
 		send.addDocument(document);
 
 		// DADOS DO COMPRADOR
-		/*
-		 * request.setHolder(new Holder("Dados Comprador", // new Phone("11",
-		 * "56273440"), // new Document(DocumentType.CPF, "000.000.001-91"), //
-		 * "07/05/1981"));
-		 */
+		request.setHolder(new Holder("Dados Comprador", //
+				new Phone("11", "56273440"), //
+				new Document(DocumentType.CPF, "000.000.001-91"), //
+				"07/05/1981"));
 
 		request.setSender(send);
 
@@ -134,16 +136,15 @@ public class CheckoutPagSeguroResource {
 		}
 
 		request.setCreditCardToken(dadosPayment.getToken());
-		parcelas = dadosPayment.getPedido().getPagamento().getNumeroDeParcelas();
-		total = UTILS.round(dadosPayment.getTotal());
 
-		request.setInstallment(new Installment(parcelas, total));
+		request.setInstallment(new Installment(dadosPayment.getPedido().getPagamento().getNumeroDeParcelas(),
+				(UTILS.round(dadosPayment.getTotal()))));
 
 		// DADOS DO COMPRADOR ENDEREÇO
 		request.setBillingAddress(new Address("BRA", "SP", "Sao Paulo", "Jardim Paulistano", "01452002",
 				"Av. Brig. Faria Lima", "1384", "5º andar"));
 
-		/*try {
+		try {
 
 			final AccountCredentials accountCredentials = PagSeguroConfig.getAccountCredentials();
 
@@ -154,9 +155,9 @@ public class CheckoutPagSeguroResource {
 				System.out.println("Transaction Code - Default Mode: " + transaction.getCode());
 
 			}
-		} catch (Exception e) {
+		} catch (PagSeguroServiceException e) {
 			System.err.println(e.getMessage());
-		}*/
+		}
 
 		return ResponseEntity.ok().body(transaction);
 	}
